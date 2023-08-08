@@ -1,16 +1,20 @@
 import {Router} from 'express'
 import { controllerViews } from '../controllers/controllerViews.js'
-import { authLogin1, authLogin2} from '../middleware/authLogin.js'
+import { authPassport2, authPassport } from '../middleware/authPasport.js'
+import passport from 'passport'
 
 export const routerViews = Router()
 
-routerViews.get('/', authLogin1, controllerViews.controllerHome) 
-routerViews.get('/realtimeproducts', controllerViews.controllerRealtimeproducts) 
-routerViews.get('/products',authLogin1, controllerViews.controllerProducts) 
-routerViews.get('/carts/:cid', authLogin1, controllerViews.controllerViewCart) 
+routerViews.get('/', controllerViews.controllerIndex) 
+routerViews.get('/users/profile-github', passport.authenticate(`github`, { scope: ['user:email'] }), controllerViews.controllerHome)
 
-routerViews.get('/register', authLogin2, controllerViews.controllerViewsRegister) 
-routerViews.get('/login', authLogin2,  controllerViews.controllerViewsLogin) 
+routerViews.get('/home', authPassport, controllerViews.controllerHome) 
+routerViews.get('/realtimeproducts', authPassport, controllerViews.controllerRealtimeproducts) 
+routerViews.get('/products',authPassport, controllerViews.controllerProducts) 
+routerViews.get('/carts/:cid', authPassport, controllerViews.controllerViewCart) 
+
 routerViews.get('/errorRegister', controllerViews.controllerViewsErrorRegister) 
 routerViews.get('/errorLogin', controllerViews.controllerViewsErrorLogin) 
 routerViews.get('/logout', controllerViews.controllerLogout) 
+routerViews.get('/register', authPassport2, controllerViews.controllerViewsRegister)
+routerViews.get('/login', authPassport2, controllerViews.controllerViewsLogin) 

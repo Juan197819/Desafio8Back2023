@@ -1,12 +1,6 @@
 import { serviceCarts } from "../services/serviceCarts.js"
 
 class ControllerCarts {
-/**
- * 
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- */
     async controllerAddCart (req, res, next){
         try {
             const response = await serviceCarts.serviceAddCart()

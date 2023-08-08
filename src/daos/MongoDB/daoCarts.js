@@ -8,6 +8,7 @@ class DaoCarts {
             if(!cart) throw new Error('Nonexistent cart!')
             return cart
         } catch (error) {
+            if (error.name == 'CastError') throw new Error('Nonexistent cart! (Incompleted ID)') 
             throw (error)   
         }
     }

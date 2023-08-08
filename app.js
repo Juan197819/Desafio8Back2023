@@ -10,6 +10,10 @@ import { routerViews } from "./src/routes/routerViews.js";
 import { routerSessions } from "./src/routes/routerSessions.js";
 import { Server } from "socket.io";
 import { errorHandler } from './src/middleware/errorHandler.js';
+import passport from 'passport';
+import './src/passport/passportLocal.js'
+import './src/passport/passportGithub.js'
+
 if(process.env.PERSISTENCIA=='MongoDB') import('./src/daos/MongoDB/db/connectionMongo.js')
 
 const app = express()
@@ -26,17 +30,20 @@ if (process.env.NODE_ENV=='development') mongoUrl ='mongodb://localhost:27017/ec
 
 app.use(session({
     secret:'1234',
-    saveUninitialized:false,
-    resave:true,
+    saveUninitialized:true,
+    resave:false,
     store: new MongoStore({
         mongoUrl,
-        mongoOptions:{useNewUrlParser:true, useUnifiedTopology:true},
+        mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+        //ttl:10
     }),
     rolling:true,
     cookie:{
-        maxAge: 10000
+       // maxAge: 100000
     }
 }))
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use('/api/products', routerProducts)
 app.use('/api/carts', routerCarts)
@@ -51,3 +58,4 @@ const server = app.listen(PORT,()=>{
 }).on('error',err=>console.log('Fallo el servidor',err))
 
 export const io = new Server(server)
+

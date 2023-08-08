@@ -1,7 +1,6 @@
 .cardProduct{
     gap:8px;
     width: 150px ;
-    height: 50vh;
     justify-content: space-between;
     align-items: center;
     display: flex;
@@ -44,4 +43,10 @@ height: 80px;}
 }
 .botonAgregarCarrito:hover {
     background-color: aqua;
+}
+.carroVacio {
+    color: white;
+    font-weight: bolder;
+    font-size: 30px;
+    text-align: center;
 }

@@ -3,19 +3,19 @@
         <h1 class="">Ingrese sus datos para crear la cuenta</h1>
         <form  class="form flexCol" action="http://127.0.0.1:8080/api/sessions/register" method="post">
             <label for="firstName">Nombre</label>
-            <input name="firstName" type="text" value="Coder">
+            <input name="firstName" type="text" value="Coder" required>
 
             <label for="lastName">Apellido</label>
-            <input name="lastName" type="text" value="House">
+            <input name="lastName" type="text" value="House" required>
 
             <label for="email">Correo Electronico</label>
-            <input name="email" type="text" value="adminCoder@coder.com">
+            <input name="email" type="email" value="adminCoder@coder.com" required>
 
             <label for="age">Edad</label>
-            <input name="age" type="text" value=20>
+            <input name="age" type="text" value=20 required>
 
             <label for="password">Contraseña</label>
-            <input name="password" type="text" value="adminCod3r123">
+            <input name="password" type="text" value="adminCod3r123" required>
 
             <input type="submit" value="Enviar">
         </form>

@@ -127,3 +127,21 @@ h1, h2{
     padding: 10px;
     background-color: rgb(162, 212, 115);
 }
+.botonGithub{
+    background-color: antiquewhite;
+    padding: 5px;
+    margin: 5px 0px 20px 0px;
+    font-size: 20px; 
+    width: 80%;
+    border-radius: 10px;
+    display: block;
+}
+.botonGithub:hover{
+    background-color: rgb(180, 174, 174);
+}
+.formLogin{
+    border: 1px solid gray;
+    margin-top: 20px;
+    border-radius: 15px;
+    background-color: rgb(175, 175, 248);
+}

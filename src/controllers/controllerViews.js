@@ -19,23 +19,31 @@ import {io} from '../../app.js'
 }
 
 class ControllerViews{
+    async controllerIndex(req, res, next) {
+        try {
+            res.status(200).redirect('/home')
+        } catch (error) {
+            next(error)   
+        }
+     }
+
     async controllerHome(req, res, next){
         try {
-            const {limit, page, sort, ...query} = req.query
+            const {limit, page, sort, code, ...query} = req.query
             const response = await serviceProducts.serviceGetProducts(limit, page, sort, query)
             const products = dtoViews(response)
-            const user = req.session.user
-            res.status(200).render('home',{products,...user})
+            req.session.user = req.user
+            res.status(200).render('home', { products,...req.user._doc })
         } catch (error) { 
-            next(error)
+            next(error)   
         }
     }
     async controllerRealtimeproducts(req, res, next){
-        const {limit, page, sort, ...query} = req.query
+        let {limit, page, sort, ...query} = req.query
         try {            
             io.on('connection', async socket=>{
                 console.log('Usuario conectado')
-                const response = await serviceProducts.serviceGetProducts(limit, page, sort, query)
+                const response = await serviceProducts.serviceGetProducts(limit=100, page, sort, query)
                 socket.emit('messageServer', dtoViews(response))
                 
                 socket.on('messageClient', async product=>{
@@ -44,9 +52,9 @@ class ControllerViews{
                     io.emit('messageServer', dtoViews(response))
                 })
             })
-            res.status(200).render('realtimeproducts.handlebars')
+            res.status(200).render('realtimeproducts.handlebars', { ...req.user._doc })
         } catch (error) {
-            next(error)
+            console.log(error)
         }
     }
     async controllerProducts(req, res, next){
@@ -54,22 +62,25 @@ class ControllerViews{
         try {
             const response = await serviceProducts.serviceGetProducts(limit, page, sort, query)
             const products = dtoViews(response)
-            res.status(200).render('products',{products, ...response})
+            res.status(200).render('products', { products, ...response, ...req.user._doc })
         } catch (error) { 
             next(error)
         }
     }
     async controllerViewCart(req, res, next){
         try {
-            const {cid} = req.params
-            const products = await serviceCarts.serviceGetProdToCart(cid)
-            const newMap = products.map(p=>{
-
-                return {
-                    ...p.product._doc,quantity:p.quantity
-                }
-            })
-            res.status(200).render('cart',{newMap})
+            const { cid } = req.params
+            console.log('cid', Boolean(cid))
+            let newMap;
+            if (cid !='cartEmpty') {
+                const products = await serviceCarts.serviceGetProdToCart(cid)
+                newMap = products.map(p => {
+                    return {
+                        ...p.product._doc, quantity: p.quantity
+                    }
+                })
+            }
+            res.status(200).render('cart', { newMap, ...req.user._doc })
         } catch (error) { 
             next(error)
         }
@@ -80,7 +91,7 @@ class ControllerViews{
         } catch (error) { 
             next(error)
         }
-    } 
+    }  
     async controllerViewsLogin(req, res, next){
         try {
             res.status(200).render('login')   
@@ -93,7 +104,7 @@ class ControllerViews{
             req.session.destroy(err=>{
                 if(err){
                     throw new Error('Error when deleting the session')
-                }console.log('Session delete!!')
+                } console.log('Session delete!!')
                 res.status(200).redirect('/login')   
             })
         } catch (error) { 

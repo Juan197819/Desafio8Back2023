@@ -1,33 +1,24 @@
-import { serviceUsers } from "../services/serviceUsers.js"
+import { isValidPass, serviceUsers } from "../services/serviceUsers.js"
 
 class ControllerUsers {
     async controllerRegister (req, res, next){
         try {
-            const newUser = req.body
-            const response = await serviceUsers.serviceAddUser(newUser)
-            if (response) {
-                res.status(300).redirect('../../login')           
-            } else {
-                res.status(400).redirect('../../errorRegister')           
-            }
+            console.log(req.body)
+            console.log(req.session)
+            console.log(req.user)
+            res.status(300).redirect('/login')           
         } catch (error) {
             next(error)
         }
     }
     async controllerLogin (req, res, next){
         try {
-            const user = req.body
-            const isExist = await serviceUsers.serviceLogin(user)
-            if ( isExist?.password==user.password) { 
-                req.session.user = {
-                    name: isExist.firstName+' '+isExist.lastName,
-                    email: isExist.email,
-                    role:isExist.role
-                }
-                res.status(200).redirect('../../')           
-            } else {
-                res.status(401).redirect('../../errorLogin')           
+            req.session.user = {
+                name: isExist.firstName+' '+isExist.lastName,
+                email: isExist.email,
+                role:isExist.role
             }
+            res.status(200).redirect('/home')           
         } catch (error) {
             next(error)
         }
