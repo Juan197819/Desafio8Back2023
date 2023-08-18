@@ -1,16 +1,14 @@
-import 'dotenv/config'
+import config from '../config/config.js';
 import bcrypt from 'bcrypt'
-const PERSISTENCIA = process.env.PERSISTENCIA //FileSystem o MongoDB (BD actual MongoDB en archivo .env)
+const PERSISTENCIA = config.PERSISTENCIA //FileSystem o MongoDB (BD actual MongoDB en archivo .env)
 const {default: daoUsers} = await import(`../daos/${PERSISTENCIA}/daoUsers.js`)
 
 function createHash(pass) {
-    return bcrypt.hashSync(pass, bcrypt.genSaltSync(5))
+    return bcrypt.hashSync(String(pass), bcrypt.genSaltSync(5))
 }
 export function isValidPass(pass, hash) {   
-    console.log(pass)
-    console.log(hash)
-    return bcrypt.compareSync(pass, hash)
-}
+    return bcrypt.compareSync(String(pass), hash)
+} 
 
 class ServiceUsers {
     async serviceAddUser (user){

@@ -26,6 +26,8 @@ async function register(req, email, password, done) {
         if (user) {
             return done(null, false)
         }  
+        console.log('user',user)
+        console.log('req.body',req.body)
         const newUser = await serviceUsers.serviceAddUser(req.body)
         return done(null, newUser)    
     } catch (error) {

@@ -52,7 +52,7 @@ class DaoCarts {
         try {
 
             const cart = await this.#getCartById(cid)
-            const index= cart.products.findIndex(p=>p==pid)
+            const index = cart.products.findIndex(p => p.product == pid)
             if(index==-1 ) throw new Error('Product Not found')
             cart.products.splice(index,1)
             cart.save()

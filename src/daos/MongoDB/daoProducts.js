@@ -10,7 +10,7 @@ class DaoProducts {
             throw (error)   
         }
     }
-    async getProducts(limit=10, page=1, sort, query={},value){
+    async getProducts(limit = 10, page = 1, sort, query = {}, value) {
         try {
             //"query" trae un objeto con todos los filtros de campos que puse en los query params
             //asi se puede filtrar por el campo que quiera (title, category, stock, etc) e incluso usar varios a la vez, si viene vacio trae todo.
@@ -30,7 +30,7 @@ class DaoProducts {
                 }
             }
             const newResponse= {
-                status: response.docs.length?'success':'error',
+                status: response.docs.length?'success':'error, product not found!',
                 payload: response.docs,
                 totalPages: response.totalPages,
                 prevPage: response.prevPage,
@@ -52,6 +52,7 @@ class DaoProducts {
             if(!product) throw new Error(`Product ID ${id} Not found`)
             return product
         } catch (error) {
+            if (error.name == 'CastError') throw new Error('Nonexistent product! (Incompleted ID)') 
             throw (error)   
         }
     }

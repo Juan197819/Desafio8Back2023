@@ -1,20 +1,16 @@
 import express from 'express'
-import 'dotenv/config'
+import config from './src/config/config.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import handlebars from 'express-handlebars'
 import __dirname from "./utils.js";
-import { routerProducts } from "./src/routes/routerProducts.js";
-import { routerCarts } from "./src/routes/routerCarts.js";
-import { routerViews } from "./src/routes/routerViews.js";
-import { routerSessions } from "./src/routes/routerSessions.js";
 import { Server } from "socket.io";
 import { errorHandler } from './src/middleware/errorHandler.js';
 import passport from 'passport';
 import './src/passport/passportLocal.js'
 import './src/passport/passportGithub.js'
-
-if(process.env.PERSISTENCIA=='MongoDB') import('./src/daos/MongoDB/db/connectionMongo.js')
+import router from './src/routes/index.js'
+if(config.PERSISTENCIA=='MongoDB') import('./src/daos/MongoDB/db/connectionMongo.js')
 
 const app = express()
 
@@ -25,8 +21,8 @@ app.engine('handlebars', handlebars.engine())
 app.set('views', __dirname +'/src/views')
 app.set('view engine', 'handlebars')
 
-let mongoUrl =process.env.MONGO_ATLAS
-if (process.env.NODE_ENV=='development') mongoUrl ='mongodb://localhost:27017/ecommerceLocal'
+let mongoUrl =config.MONGO_ATLAS
+if (config.NODE_ENV=='development') mongoUrl ='mongodb://localhost:27017/ecommerceLocal'
 
 app.use(session({
     secret:'1234',
@@ -45,10 +41,7 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use('/api/products', routerProducts)
-app.use('/api/carts', routerCarts)
-app.use('/api/sessions', routerSessions)
-app.use('/', routerViews)
+app.use('/',router)
 app.all('*', (req, res, next)=>res.status(404).json('Invalid path'))
 app.use(errorHandler)
 

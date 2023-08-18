@@ -1,5 +1,5 @@
-import 'dotenv/config'
-const PERSISTENCIA = process.env.PERSISTENCIA //FileSystem o MongoDB (BD actual MongoDB en archivo .env)
+import config from '../config/config.js';
+const PERSISTENCIA = config.PERSISTENCIA //FileSystem o MongoDB (BD actual MongoDB en archivo .env)
 const {default: daoProducts} = await import(`../daos/${PERSISTENCIA}/daoProducts.js`)
 console.log('Persistencia' ,PERSISTENCIA)
 
@@ -9,6 +9,7 @@ class ServiceProducts {
             const newProduct = await daoProducts.addProduct(product)
             return newProduct
         } catch (error) {
+            if (error.name == 'ValidationError') throw new Error('Error saving product, incomplete product data!') 
             throw error
         }
     }

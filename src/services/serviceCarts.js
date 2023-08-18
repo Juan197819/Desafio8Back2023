@@ -1,6 +1,6 @@
-import 'dotenv/config'
-const PERSISTENCIA = process.env.PERSISTENCIA //FileSystem o MongoDB (BD actual MongoDB en archivo .env)
-const {default: daoCart} = await import(`../daos/${process.env.PERSISTENCIA}/daoCarts.js`)
+import config from '../config/config.js';
+const PERSISTENCIA = config.PERSISTENCIA //FileSystem o MongoDB (BD actual MongoDB en archivo .env)
+const {default: daoCart} = await import(`../daos/${config.PERSISTENCIA}/daoCarts.js`)
 
 class ServiceCarts {
     async serviceAddCart (){
