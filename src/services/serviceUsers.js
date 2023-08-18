@@ -13,7 +13,7 @@ export function isValidPass(pass, hash) {
 class ServiceUsers {
     async serviceAddUser (user){
         try {
-            if (user.email == 'adminCoder@coder.com' && user.password == 'adminCod3r123') user.role = 'admin'
+            if (user.email == config.ADMIN_EMAIL && user.password == config.ADMIN_PASSWORD) user.role = 'admin'
 
             const objUser = {
                 ...user,

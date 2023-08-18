@@ -1,3 +1,5 @@
 NODE_ENV= development || null
 PERSISTENCIA= FileSystem || MongoDB
 MONGO_ATLAS=
+ADMIN_EMAIL=
+ADMIN_PASSWORD
